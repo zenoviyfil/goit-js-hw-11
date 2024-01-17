@@ -26,22 +26,35 @@ searchForm.addEventListener("submit", handleSearch)
 function handleSearch(event) {
   event.preventDefault()
 
-  const searchValue = event.currentTarget.elements.query.value;
+  const form = event.currentTarget;
+  const searchValue = form.elements.query.value;
 
   fetchData(searchValue).then(render).catch(handleError);
 }
 
-function render({
-  largeImageURL,
-  index,
-  webformatURL,
-  tags,
-  likes,
-  views,
-  downloads,
-  comments,
-}) {
-  const markup = `<li class="gallery-item">
+function render(data) {
+  gallery.innerHTML = createMarkup(data.hits);
+}
+
+  function handleError(error) {
+    alert(
+      'Sorry, there are no images matching your search query. Please try again!'
+    );
+    console.error(error);
+  }
+
+  function createMarkup(arr) {
+    return arr.map(
+      ({
+        largeImageURL,
+        index,
+        webformatURL,
+        tags,
+        likes,
+        views,
+        downloads,
+        comments,
+      }) => `<li class="gallery-item">
         <a href="${largeImageURL}" target="_blank">
         <img class="gallery-image" hits-index="${index}" src="${webformatURL}" alt="${tags}">
             <ul class="gallery-item-description">
@@ -51,13 +64,6 @@ function render({
                 <li>Comments: ${comments}</li>
             </ul>
         </a>
-    </li>`;
-  gallery.insertAdjacentHTML('afterbegin', markup);
-}
-
-  function handleError(error) {
-    alert(
-      'Sorry, there are no images matching your search query. Please try again!'
-    );
-    console.error(error);
+    </li>`
+    ).join('');
   }
