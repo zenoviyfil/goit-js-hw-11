@@ -34,13 +34,15 @@ function handleSearch(event) {
 
 function render(data) {
   gallery.innerHTML = createMarkup(data.hits);
+  lightbox.refresh();
 }
 
   function handleError(error) {
-    alert(
-      'Sorry, there are no images matching your search query. Please try again!'
-    );
-    console.error(error);
+    if (!searchValue) {
+          iziToast.error({
+            message: `Sorry, there are no images matching your search query. Please try again!`,
+          });
+    }
   }
 
   function createMarkup(arr) {
