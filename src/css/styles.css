@@ -24,16 +24,32 @@
   -webkit-text-size-adjust: 100%;
 }
 
+.search-form {
+  display: flex;
+  justify-content: center;
+  margin: 10px;
+}
+
 .gallery {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
+  gap: 20px;
 }
 
 .gallery-item {
-  width: 360px;
-  height: 100%;
   list-style-type: none;
+  border-style: solid;
 }
 
+.gallery-image {
+  width: 320px;
+  height: 200px;
+  object-fit: cover;
+}
+
+.gallery-item-description {
+  display: flex;
+  width: 320px;
+}

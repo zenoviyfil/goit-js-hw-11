@@ -55,7 +55,7 @@ function render(data) {
         downloads,
         comments,
       }) => `<li class="gallery-item">
-        <a href="${largeImageURL}" target="_blank">
+        <a href="${largeImageURL}">
         <img class="gallery-image" hits-index="${index}" src="${webformatURL}" alt="${tags}">
             <ul class="gallery-item-description">
                 <li>Likes: ${likes}</li>
@@ -67,3 +67,9 @@ function render(data) {
     </li>`
     ).join('');
   }
+
+  let lightbox = new SimpleLightbox('.gallery a', {
+    /* options */
+    captionsData: 'alt',
+    captionDelay: 250,
+  });
