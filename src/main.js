@@ -20,43 +20,49 @@ function fetchData(searchValue) {
 
 const searchForm = document.querySelector('.search-form')
 const gallery = document.querySelector('.gallery')
+const loader = document.querySelector('.loader')
 
 searchForm.addEventListener("submit", handleSearch)
 
 function handleSearch(event) {
   event.preventDefault()
-
   const form = event.currentTarget;
   const searchValue = form.elements.query.value;
-
-  fetchData(searchValue).then(render).catch(handleError);
+  loader.classList.add('loader'); 
+  fetchData(searchValue).then(render).catch(handleError).finally(() => {form.reset();
+  loader.classList.remove('loader');
+  });
 }
 
 function render(data) {
+  if(data.hits.length === 0){
+    iziToast.error({
+      message: `Sorry, there are no images matching your search query. Please try again!`,
+    });
+  }
   gallery.innerHTML = createMarkup(data.hits);
   lightbox.refresh();
 }
 
   function handleError(error) {
-    if (!searchValue) {
           iziToast.error({
-            message: `Sorry, there are no images matching your search query. Please try again!`,
+            message: `Sorry, something went wrong. Please try again later!`,
           });
-    }
   }
 
   function createMarkup(arr) {
-    return arr.map(
-      ({
-        largeImageURL,
-        index,
-        webformatURL,
-        tags,
-        likes,
-        views,
-        downloads,
-        comments,
-      }) => `<li class="gallery-item">
+    return arr
+      .map(
+        ({
+          largeImageURL,
+          index,
+          webformatURL,
+          tags,
+          likes,
+          views,
+          downloads,
+          comments,
+        }) => `<li class="gallery-item">
         <a href="${largeImageURL}">
         <img class="gallery-image" hits-index="${index}" src="${webformatURL}" alt="${tags}">
             <ul class="gallery-item-description">
@@ -67,7 +73,8 @@ function render(data) {
             </ul>
         </a>
     </li>`
-    ).join('');
+      )
+      .join('');
   }
 
   let lightbox = new SimpleLightbox('.gallery a', {
