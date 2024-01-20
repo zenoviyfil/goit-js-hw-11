@@ -8,8 +8,13 @@ const API_URL = 'https://pixabay.com/api/';
 const API_KEY = '41812412-8184544d67aaee5dc545e6a16';
 const url = `${API_URL}?key=${API_KEY}`;
 
+const options = {
+  image_type: "photo", 
+  orientation: "horizontal", 
+  safesearch: true,
+}
 function fetchData(searchValue) {
-  return fetch(`${url}&q=${searchValue}`)
+  return fetch(`${url}&q=${searchValue}`, options)
     .then(resp => {
       if (!resp.ok) {
         throw new Error(resp.statusText);
@@ -21,14 +26,18 @@ function fetchData(searchValue) {
 const searchForm = document.querySelector('.search-form')
 const gallery = document.querySelector('.gallery')
 const loader = document.querySelector('.loader')
+loader.classList.remove('loader')
 
 searchForm.addEventListener("submit", handleSearch)
 
 function handleSearch(event) {
   event.preventDefault()
+
   const form = event.currentTarget;
   const searchValue = form.elements.query.value;
+  
   loader.classList.add('loader'); 
+  
   fetchData(searchValue).then(render).catch(handleError).finally(() => {form.reset();
   loader.classList.remove('loader');
   });
@@ -55,7 +64,6 @@ function render(data) {
       .map(
         ({
           largeImageURL,
-          index,
           webformatURL,
           tags,
           likes,
@@ -64,7 +72,7 @@ function render(data) {
           comments,
         }) => `<li class="gallery-item">
         <a href="${largeImageURL}">
-        <img class="gallery-image" hits-index="${index}" src="${webformatURL}" alt="${tags}">
+        <img class="gallery-image" src="${webformatURL}" alt="${tags}">
             <ul class="gallery-item-description">
                 <li>Likes: ${likes}</li>
                 <li>Views: ${views}</li>
